@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>蓋亞紀元：地科特搜小隊 (學測詳解版)</title>
+    <title>蓋亞紀元：地科特搜小隊 (V5.0 終極版)</title>
     <style>
         body {
             background-color: #0f171e; background-image: radial-gradient(circle at 50% 0%, #1e3240, #0f171e);
@@ -17,14 +17,26 @@
             padding: 25px; width: 380px; text-align: center; position: relative;
         }
         
-        /* 特效 */
+        /* 視覺特效 */
         .flash-green { box-shadow: 0 0 50px rgba(100, 255, 218, 0.9), inset 0 0 30px rgba(100, 255, 218, 0.6) !important; border-color: #64ffda !important; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .shake-error { animation: shake 0.3s; border-color: #ff5555 !important; box-shadow: 0 0 30px rgba(255, 85, 85, 0.6) !important; }
         
-        h1 { color: #d4af37; font-size: 22px; margin-top: 0; letter-spacing: 1px; }
+        h1 { color: #d4af37; font-size: 24px; margin-top: 0; letter-spacing: 1px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        
+        /* ============ 首頁選單樣式 ============ */
+        .domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .domain-card {
+            background: rgba(20, 30, 40, 0.8); border: 1px solid #5a7a8a; border-radius: 10px;
+            padding: 20px 10px; cursor: pointer; transition: all 0.3s;
+        }
+        .domain-card:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); border-color: #d4af37; }
+        .domain-icon { font-size: 40px; margin-bottom: 10px; }
+        .domain-title { font-weight: bold; font-size: 16px; color: #fff; }
+        
+        /* ============ 遊戲介面樣式 ============ */
         .avatar-area { display: flex; align-items: center; text-align: left; margin-bottom: 15px; border-bottom: 1px solid #3a4a5a; padding-bottom: 10px; }
-        .avatar { font-size: 30px; background: linear-gradient(135deg, #64ffda, #2a4858); border-radius: 50%; padding: 5px; border: 2px solid #d4af37; margin-right: 12px; }
+        .avatar { font-size: 30px; background: linear-gradient(135deg, #2a4858, #111); border-radius: 50%; padding: 5px; border: 2px solid #d4af37; margin-right: 12px; }
         .story-text { font-size: 14px; color: #88d4c1; line-height: 1.5; }
         
         .status-bar { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-bottom: 15px; background: #1a2c38; padding: 10px; border-radius: 8px; }
@@ -35,7 +47,6 @@
         .hemisphere-tag { background: #d4af37; color: #000; padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; margin-bottom: 10px; }
         .wind-arrow { font-size: 60px; margin: 10px 0; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
         
-        /* 題目大字體 */
         .question-text { font-size: 20px; font-weight: bold; margin-bottom: 15px; line-height: 1.5; color: #ffddaa; text-align: left; }
         
         .btn-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
@@ -52,141 +63,242 @@
         .success-text { color: #64ffda; }
         .error-text { color: #ff5555; }
 
-        /* 戰後筆記 (錯題本) 樣式 */
+        /* 戰後筆記 (錯題本) */
         .report-box { background: rgba(0,0,0,0.6); border: 1px solid #64ffda; border-radius: 10px; padding: 15px; margin-top: 15px; text-align: left; }
         .report-title { color: #d4af37; font-size: 18px; margin-top: 0; border-bottom: 1px solid #d4af37; padding-bottom: 5px; }
         .wrong-item { background: rgba(255,85,85,0.1); border-left: 4px solid #ff5555; padding: 10px; margin-bottom: 15px; }
         .exp-detail { font-size: 14px; color: #bbb; margin-top: 10px; line-height: 1.6; }
         .exp-detail span.right-opt { color: #64ffda; }
         .exp-detail span.wrong-opt { color: #ffaaaa; }
+        
+        .home-btn { background: #d4af37; color: #000; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="game-container" id="gameBox">
-    <h1>🌪️ 蓋亞觀測站：學測特訓</h1>
     
-    <div class="avatar-area">
-        <div class="avatar">👦🏼</div>
-        <div class="story-text" id="storyBox">
-            嵐：「指揮官！前方偵測到學測級別的氣象異常！請先破解科氏力護盾，再用正確的觀念擊潰它的核心！」
-        </div>
-    </div>
-    
-    <div class="status-bar" id="statusBar">
-        <div style="color: #64ffda;" id="phaseText">階段 1：護盾破解</div>
-        <div style="color: #ff5555;">Boss HP: <span id="hpNum">100</span>%</div>
-    </div>
-    <div class="boss-hp-bar" id="hpBarContainer"><div class="boss-hp-fill" id="hpFill"></div></div>
-
-    <div id="phase1" class="combat-area">
-        <div class="hemisphere-tag" id="hemiTag">北半球</div>
-        <div class="question-text" style="text-align:center;" id="p1Dir">氣壓梯度力：向北</div>
-        <div class="wind-arrow" id="p1Arrow">⬆️</div>
-        <div class="row-btns">
-            <button class="p1-btn" onclick="checkP1('left')">向左偏轉</button>
-            <button class="p1-btn" onclick="checkP1('right')">向右偏轉</button>
+    <div id="homeScreen">
+        <h1>🌍 蓋亞紀元：特搜小隊</h1>
+        <p style="color: #88d4c1; font-size: 14px;">指揮官，請選擇您要出擊的領域！</p>
+        <div class="domain-grid">
+            <div class="domain-card" onclick="startGame('atmosphere')">
+                <div class="domain-icon">🌪️</div><div class="domain-title">大氣領域</div>
+            </div>
+            <div class="domain-card" onclick="startGame('astronomy')">
+                <div class="domain-icon">🌟</div><div class="domain-title">天文領域</div>
+            </div>
+            <div class="domain-card" onclick="startGame('geology')">
+                <div class="domain-icon">🌋</div><div class="domain-title">地質領域</div>
+            </div>
+            <div class="domain-card" onclick="startGame('ocean')">
+                <div class="domain-icon">🌊</div><div class="domain-title">海洋領域</div>
+            </div>
         </div>
     </div>
 
-    <div id="phase2" class="combat-area hidden">
-        <div class="question-text" id="p2Question">題目載入中...</div>
-        <div class="btn-group" id="p2Options"></div>
+    <div id="gameScreen" class="hidden">
+        <h1 id="levelTitle">關卡名稱</h1>
+        
+        <div class="avatar-area">
+            <div class="avatar" id="avatarIcon">👦🏼</div>
+            <div class="story-text" id="storyBox">劇情對話</div>
+        </div>
+        
+        <div class="status-bar" id="statusBar">
+            <div style="color: #64ffda;" id="phaseText">階段 1：護盾破解</div>
+            <div style="color: #ff5555;">Boss HP: <span id="hpNum">100</span>%</div>
+        </div>
+        <div class="boss-hp-bar" id="hpBarContainer"><div class="boss-hp-fill" id="hpFill"></div></div>
+
+        <div id="phase1" class="combat-area">
+            <div class="hemisphere-tag" id="hemiTag">北半球</div>
+            <div class="question-text" style="text-align:center;" id="p1Dir">氣壓梯度力：向北</div>
+            <div class="wind-arrow" id="p1Arrow">⬆️</div>
+            <div class="row-btns">
+                <button class="p1-btn" onclick="checkP1('left')">向左偏轉</button>
+                <button class="p1-btn" onclick="checkP1('right')">向右偏轉</button>
+            </div>
+        </div>
+
+        <div id="phase2" class="combat-area hidden">
+            <div class="question-text" id="p2Question">題目載入中...</div>
+            <div class="btn-group" id="p2Options"></div>
+        </div>
+
+        <div id="message"></div>
     </div>
 
     <div id="victoryScreen" class="hidden">
         <h2 style="color:#64ffda;">🏆 討伐成功</h2>
         <div id="reportArea"></div>
+        <button class="home-btn" onclick="returnToHome()">返回基地</button>
     </div>
 
-    <div id="message"></div>
 </div>
 
 <script>
+    // ================= 原生合成音效系統 (Web Audio API) =================
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playTone(freq, type, duration, vol=0.1) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }
+
+    // 答對音效：清脆的高音 (叮咚)
+    function sfxCorrect() {
+        initAudio();
+        playTone(880, 'sine', 0.1); 
+        setTimeout(() => playTone(1108, 'sine', 0.2), 100);
+    }
+
+    // 答錯音效：低沉的蜂鳴 (叭叭)
+    function sfxWrong() {
+        initAudio();
+        playTone(300, 'sawtooth', 0.2);
+        setTimeout(() => playTone(250, 'sawtooth', 0.3), 150);
+    }
+
+    // 過關音效：原神抽卡金光般的勝利音效 (歡呼和弦)
+    function sfxVictory() {
+        initAudio();
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C大三和弦琶音
+        notes.forEach((freq, i) => {
+            setTimeout(() => playTone(freq, 'triangle', i===3?0.6:0.2, 0.15), i * 120);
+        });
+    }
+
+    // ================= 四大領域題庫系統 =================
+    // ★ 亮點：這裡包含了您提供的 115 學測自然科真實題目！
+    const domainData = {
+        atmosphere: {
+            title: "🌪️ 溫帶氣旋討伐戰", avatar: "👦🏼", charName: "嵐",
+            intro: "指揮官！氣壓異常！請先破解科氏力護盾，再用正確的觀念擊潰它的核心！",
+            questions: [
+                {
+                    q: "當冷鋒通過台灣時，通常會伴隨下列哪一種天氣變化？",
+                    options: ["(A) 氣壓下降，氣溫上升", "(B) 氣壓上升，氣溫下降", "(C) 風向轉為偏南風", "(D) 出現連續數天的綿綿細雨"],
+                    ans: 1,
+                    explanation: "<span class='right-opt'>(B) 正確：</span>冷氣團取代暖氣團，導致氣溫下降、氣壓上升。<br><span class='wrong-opt'>(A)(C)(D) 錯誤。</span>"
+                }
+            ]
+        },
+        astronomy: {
+            title: "🌟 渾沌黑洞討伐戰", avatar: "👩🏻", charName: "遙",
+            intro: "星象發生了偏移...指揮官，我們必須解開恆星與宇宙的歷史，才能穩定時空！",
+            questions: [
+                {
+                    // 來自您上傳的 115 學測自然科考卷概念！
+                    q: "【115學測題】太陽系的小天體是由太陽星雲中的塵埃累積而成，科學家透過隕石來瞭解太陽系的形成時間。若想知道隕石的年齡，最常藉由下列何種方法得知？",
+                    options: ["(A) 碳-14放射性同位素定年法", "(B) 鈾-鉛放射性同位素定年法", "(C) 分析隕石表面的風化與撞擊坑", "(D) 觀察隕石中的化石紀錄"],
+                    ans: 1,
+                    explanation: "<span class='wrong-opt'>(A) 錯誤：</span>碳-14半衰期太短（約5730年），無法測定數十億年的太陽系年齡。<br><span class='right-opt'>(B) 正確：</span>鈾的同位素半衰期長達數億至數十億年，非常適合用來測定隕石與太陽系的絕對年齡。<br><span class='wrong-opt'>(C)(D) 錯誤：</span>這些無法測定「絕對年齡」，且隕石中無生命化石。"
+                }
+            ]
+        },
+        geology: {
+            title: "🌋 斷層巨龍討伐戰", avatar: "👦🏽", charName: "焰",
+            intro: "大地在震動！指揮官，快點幫我判斷地震波的方向，粉碎這頭巨龍的板塊裝甲！",
+            questions: [
+                {
+                    q: "關於地震波（P波與S波）的性質，下列敘述何者正確？",
+                    options: ["(A) S波的傳遞速度比P波快", "(B) P波只能在固體中傳播", "(C) S波會造成地表上下震動", "(D) 測站會先接收到P波，再接收到S波"],
+                    ans: 3,
+                    explanation: "<span class='right-opt'>(D) 正確：</span>P波(縱波)速度快最先到達，S波(橫波)速度較慢隨後到達。<br><span class='wrong-opt'>(B) 錯誤：</span>P波可在固、液、氣體中傳播，S波才只能在固體中傳播。"
+                }
+            ]
+        },
+        ocean: {
+            title: "🌊 聖嬰海怪討伐戰", avatar: "👧🏻", charName: "澪",
+            intro: "指揮官...海流的溫度異常升高了。請協助我解析大洋環流，喚醒深層的湧升流吧！",
+            questions: [
+                {
+                    q: "當太平洋發生「聖嬰現象 (El Niño)」時，赤道東太平洋（如秘魯沿岸）會出現何種異常現象？",
+                    options: ["(A) 表層海水溫度異常降低", "(B) 湧升流增強，漁獲量大增", "(C) 東風（信風）異常增強", "(D) 表層海水溫度異常升高，降雨量增加"],
+                    ans: 3,
+                    explanation: "<span class='right-opt'>(D) 正確：</span>聖嬰時信風減弱，暖海水向東回流，導致秘魯沿岸水溫升高、降雨增加。<br><span class='wrong-opt'>(B) 錯誤：</span>湧升流會減弱甚至消失，導致漁獲量大減。"
+                }
+            ]
+        }
+    };
+
+    // ================= 遊戲核心變數 =================
+    let currentDomain = null;
     let bossHp = 100;
     let p1Combo = 0;
     let currentQIndex = 0;
-    let wrongRecords = []; // 紀錄錯題
-    let hasFailedCurrentQ = false; // 紀錄目前這題是否答錯過
-    
-    const gameBox = document.getElementById('gameBox');
-    const msg = document.getElementById('message');
-    const hpFill = document.getElementById('hpFill');
-    const hpNum = document.getElementById('hpNum');
+    let wrongRecords = [];
+    let hasFailedCurrentQ = false;
+    let currentHemi = "";
+    const directions = [{ name: "向北", sym: "⬆️" }, { name: "向南", sym: "⬇️" }, { name: "向東", sym: "➡️" }, { name: "向西", sym: "⬅️" }];
 
-    // ================= 學測題庫區 (含詳解) =================
-    const earthScienceDB = [
-        {
-            q: "當冷鋒通過台灣時，通常會伴隨下列哪一種天氣變化？",
-            options: [
-                "(A) 氣壓下降，氣溫上升", 
-                "(B) 氣壓上升，氣溫下降", 
-                "(C) 風向轉為偏南風", 
-                "(D) 出現連續數天的綿綿細雨"
-            ],
-            ans: 1, // (B)
-            explanation: `
-                <span class="wrong-opt">(A) 錯誤：</span>冷鋒是冷氣團推擠暖氣團，氣溫會下降，且冷空氣密度大，氣壓會上升。<br>
-                <span class="right-opt">(B) 正確：</span>冷氣團取代暖氣團，導致氣溫下降、氣壓上升。<br>
-                <span class="wrong-opt">(C) 錯誤：</span>冷鋒過境後，台灣通常會受大陸冷氣團影響，風向轉為偏北風（如東北季風）。<br>
-                <span class="wrong-opt">(D) 錯誤：</span>冷鋒通常伴隨「短暫陣雨或雷雨」；連續綿綿細雨通常是「暖鋒」或「滯留鋒」的特徵。
-            `
-        },
-        {
-            q: "關於北半球地面天氣圖中的高低氣壓，下列敘述何者正確？",
-            options: [
-                "(A) 高氣壓中心氣流輻合上升", 
-                "(B) 低氣壓中心氣流輻散下沉", 
-                "(C) 受科氏力影響，低氣壓周圍空氣逆時針向中心流入", 
-                "(D) 高氣壓中心通常伴隨陰雨天氣"
-            ],
-            ans: 2, // (C)
-            explanation: `
-                <span class="wrong-opt">(A) 錯誤：</span>高氣壓中心是氣流「輻散下沉」。<br>
-                <span class="wrong-opt">(B) 錯誤：</span>低氣壓中心是氣流「輻合上升」。<br>
-                <span class="right-opt">(C) 正確：</span>北半球氣壓梯度力由外向內，加上科氏力向右偏轉，形成「逆時針輻合」的低氣壓。<br>
-                <span class="wrong-opt">(D) 錯誤：</span>高氣壓由於是下沉氣流，水氣不易凝結，通常是晴朗好天氣。
-            `
-        },
-        {
-            q: "颱風是影響台灣的重要天氣系統，關於颱風結構敘述，何者正確？",
-            options: [
-                "(A) 颱風眼是整個颱風風速最強、雨勢最大的地方", 
-                "(B) 颱風眼牆（雲牆）是上升氣流最強烈、風雨最大的區域", 
-                "(C) 颱風屬於溫帶氣旋的一種", 
-                "(D) 颱風接近陸地時，受地形摩擦力影響風速會增強"
-            ],
-            ans: 1, // (B)
-            explanation: `
-                <span class="wrong-opt">(A) 錯誤：</span>颱風眼中心是下沉氣流，呈現「無風無雨」甚至可見藍天的狀態。<br>
-                <span class="right-opt">(B) 正確：</span>緊鄰颱風眼的「眼牆」，是對流最旺盛、上升氣流最強、風雨最劇烈的區域。<br>
-                <span class="wrong-opt">(C) 錯誤：</span>颱風生成於熱帶海洋，屬於「熱帶氣旋」，沒有冷暖鋒結構。<br>
-                <span class="wrong-opt">(D) 錯誤：</span>地形摩擦力會消耗颱風能量並破壞其結構，導致風速「減弱」。
-            `
-        }
-    ];
+    // ================= 流程控制 =================
+    function startGame(domainKey) {
+        initAudio(); // 點擊時初始化音效引擎
+        currentDomain = domainData[domainKey];
+        
+        // UI 切換
+        document.getElementById('homeScreen').classList.add('hidden');
+        document.getElementById('victoryScreen').classList.add('hidden');
+        document.getElementById('gameScreen').classList.remove('hidden');
+        document.getElementById('statusBar').classList.remove('hidden');
+        document.getElementById('hpBarContainer').classList.remove('hidden');
+        document.getElementById('phase1').classList.remove('hidden');
+        document.getElementById('phase2').classList.add('hidden');
+        
+        // 資料載入
+        document.getElementById('levelTitle').innerText = currentDomain.title;
+        document.getElementById('avatarIcon').innerText = currentDomain.avatar;
+        document.getElementById('storyBox').innerText = `${currentDomain.charName}：「${currentDomain.intro}」`;
+        
+        // 重置狀態
+        bossHp = 100; p1Combo = 0; currentQIndex = 0; wrongRecords = [];
+        updateHP();
+        loadP1();
+    }
+
+    function returnToHome() {
+        document.getElementById('gameScreen').classList.add('hidden');
+        document.getElementById('victoryScreen').classList.add('hidden');
+        document.getElementById('homeScreen').classList.remove('hidden');
+    }
 
     // ================= Phase 1 =================
-    const directions = [{ name: "向北", sym: "⬆️" }, { name: "向南", sym: "⬇️" }, { name: "向東", sym: "➡️" }, { name: "向西", sym: "⬅️" }];
-    let currentHemi = "";
-
     function loadP1() {
         if (p1Combo >= 3) { startPhase2(); return; }
         currentHemi = Math.random() > 0.5 ? "北半球" : "南半球";
         let dir = directions[Math.floor(Math.random() * directions.length)];
+        
         document.getElementById('hemiTag').innerText = currentHemi;
         document.getElementById('hemiTag').style.background = currentHemi === "北半球" ? "#d4af37" : "#88d4c1";
-        document.getElementById('p1Dir').innerText = "氣壓梯度力：" + dir.name;
+        document.getElementById('p1Dir').innerText = "科氏力防護罩：氣流" + dir.name;
         document.getElementById('p1Arrow').innerText = dir.sym;
-        msg.innerText = `護盾連擊: ${p1Combo}/3`;
+        document.getElementById('message').innerText = `護盾連擊: ${p1Combo}/3`;
     }
 
     function checkP1(ans) {
         let isCorrect = (currentHemi === "北半球" && ans === "right") || (currentHemi === "南半球" && ans === "left");
         if (isCorrect) {
-            p1Combo++; damageBoss(10); showEffect(true, "護盾削弱！"); setTimeout(loadP1, 800);
+            p1Combo++; damageBoss(10); showEffect(true, "護盾削弱！");
+            sfxCorrect(); // 播放答對音效
+            setTimeout(loadP1, 800);
         } else {
-            p1Combo = 0; showEffect(false, `錯誤！${currentHemi}應向${currentHemi==="北半球"?"右":"左"}偏！`); setTimeout(loadP1, 1500);
+            p1Combo = 0; showEffect(false, `錯誤！${currentHemi}應向${currentHemi==="北半球"?"右":"左"}偏！`);
+            sfxWrong(); // 播放答錯音效
+            setTimeout(loadP1, 1500);
         }
     }
 
@@ -195,16 +307,16 @@
         document.getElementById('phase1').classList.add('hidden');
         document.getElementById('phase2').classList.remove('hidden');
         document.getElementById('phaseText').innerText = "階段 2：學測知識戰";
-        document.getElementById('storyBox').innerText = "嵐：「Boss 核心暴露！請回答學測級別的大氣難題，給予致命一擊！」";
+        document.getElementById('storyBox').innerText = `${currentDomain.charName}：「護盾破除了！Boss 核心暴露，請用正確的知識給予致命一擊！」`;
         loadP2();
     }
 
     function loadP2() {
-        if (currentQIndex >= earthScienceDB.length || bossHp <= 0) { victory(); return; }
-        hasFailedCurrentQ = false; // 新題目重置錯題狀態
+        if (currentQIndex >= currentDomain.questions.length || bossHp <= 0) { victory(); return; }
+        hasFailedCurrentQ = false;
         
-        let qData = earthScienceDB[currentQIndex];
-        document.getElementById('p2Question').innerText = `【第 ${currentQIndex+1} 題】\n` + qData.q;
+        let qData = currentDomain.questions[currentQIndex];
+        document.getElementById('p2Question').innerText = `【實戰演練】\n` + qData.q;
         
         let optContainer = document.getElementById('p2Options');
         optContainer.innerHTML = '';
@@ -215,32 +327,36 @@
             btn.onclick = () => checkP2(index, qData.ans);
             optContainer.appendChild(btn);
         });
-        msg.innerText = "請選擇正確答案！";
+        document.getElementById('message').innerText = "請選擇正確答案！";
     }
 
     function checkP2(selectedIndex, correctIndex) {
         if (selectedIndex === correctIndex) {
-            damageBoss(25);
+            damageBoss(40);
             showEffect(true, "正確！致命打擊！");
+            sfxCorrect(); // 答對音效
             currentQIndex++;
             setTimeout(loadP2, 1200);
         } else {
             showEffect(false, "觀念錯誤！已記錄至錯題本，請再試一次！");
-            // 如果是第一次答錯這題，就記錄下來
+            sfxWrong(); // 答錯音效
             if(!hasFailedCurrentQ) {
-                wrongRecords.push(earthScienceDB[currentQIndex]);
+                wrongRecords.push(currentDomain.questions[currentQIndex]);
                 hasFailedCurrentQ = true;
             }
         }
     }
 
-    // ================= 系統與結算 =================
+    // ================= 核心工具 =================
     function damageBoss(amt) {
         bossHp -= amt; if(bossHp < 0) bossHp = 0;
-        hpNum.innerText = bossHp; hpFill.style.width = bossHp + "%";
+        document.getElementById('hpNum').innerText = bossHp;
+        document.getElementById('hpFill').style.width = bossHp + "%";
     }
 
     function showEffect(isGood, text) {
+        const gameBox = document.getElementById('gameBox');
+        const msg = document.getElementById('message');
         msg.innerHTML = `<span class="${isGood ? 'success-text' : 'error-text'}">${text}</span>`;
         gameBox.classList.add(isGood ? 'flash-green' : 'shake-error');
         setTimeout(() => { gameBox.classList.remove('flash-green', 'shake-error'); }, 400);
@@ -250,34 +366,29 @@
         document.getElementById('phase2').classList.add('hidden');
         document.getElementById('statusBar').classList.add('hidden');
         document.getElementById('hpBarContainer').classList.add('hidden');
+        document.getElementById('message').innerText = "";
+        
+        sfxVictory(); // 播放勝利過關音效！
+        
+        document.getElementById('storyBox').innerText = `${currentDomain.charName}：「危機解除！指揮官，這是本次戰鬥的【絕密檔案】，請查收！」`;
         document.getElementById('victoryScreen').classList.remove('hidden');
-        msg.innerText = "";
         
-        document.getElementById('storyBox').innerText = "嵐：「氣旋崩壞斬！風暴平息了。指揮官，這是本次戰鬥的【絕密檔案】，請查收！」";
-        
-        let reportHTML = `<div class="report-box"><h3 class="report-title">📚 蓋亞觀測站：絕密檔案</h3>`;
-        
+        let reportHTML = `<div class="report-box"><h3 class="report-title">📚 蓋亞觀測站：戰後檢討</h3>`;
         if (wrongRecords.length === 0) {
-            reportHTML += `<p style="color:#64ffda; font-weight:bold;">✨ 完美通關！所有學測觀念皆完全掌握，沒有錯題！</p></div>`;
+            reportHTML += `<p style="color:#64ffda; font-weight:bold;">✨ 完美通關！所有觀念皆完全掌握，沒有錯題！</p></div>`;
         } else {
             reportHTML += `<p style="color:#ffddaa; font-size:14px;">偵測到戰鬥中有盲點，以下為錯題的詳細解析：</p>`;
             wrongRecords.forEach((qData, idx) => {
                 reportHTML += `
                     <div class="wrong-item">
-                        <div style="font-weight:bold; color:#fff;">錯題 ${idx+1}: ${qData.q}</div>
-                        <div class="exp-detail">
-                            <strong style="color:#d4af37;">【各選項詳解】</strong><br>
-                            ${qData.explanation}
-                        </div>
-                    </div>
-                `;
+                        <div style="font-weight:bold; color:#fff;">${qData.q}</div>
+                        <div class="exp-detail"><strong style="color:#d4af37;">【解析】</strong><br>${qData.explanation}</div>
+                    </div>`;
             });
             reportHTML += `</div>`;
         }
         document.getElementById('reportArea').innerHTML = reportHTML;
     }
-
-    loadP1();
 </script>
 
 </body>
