@@ -3,112 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>蓋亞紀元：地科特搜小隊 (V5.0 終極版)</title>
+    <title>蓋亞紀元：地科特搜小隊 (V6.0 115學測版)</title>
     <style>
-        body {
-            background-color: #0f171e; background-image: radial-gradient(circle at 50% 0%, #1e3240, #0f171e);
-            color: #e5e0d8; font-family: "Microsoft JhengHei", sans-serif;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; margin: 0; padding: 20px 0; overflow-y: auto;
-        }
-        .game-container {
-            background: rgba(15, 23, 30, 0.95); border: 2px solid #d4af37;
-            border-radius: 15px; box-shadow: 0 0 30px rgba(100, 255, 218, 0.15), inset 0 0 15px #d4af37;
-            padding: 25px; width: 380px; text-align: center; position: relative;
-        }
-        
-        /* 視覺特效 */
+        body { background-color: #0f171e; background-image: radial-gradient(circle at 50% 0%, #1e3240, #0f171e); color: #e5e0d8; font-family: "Microsoft JhengHei", sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; overflow-y: auto; }
+        .game-container { background: rgba(15, 23, 30, 0.95); border: 2px solid #d4af37; border-radius: 15px; box-shadow: 0 0 30px rgba(100, 255, 218, 0.15), inset 0 0 15px #d4af37; padding: 25px; width: 380px; text-align: center; position: relative; }
         .flash-green { box-shadow: 0 0 50px rgba(100, 255, 218, 0.9), inset 0 0 30px rgba(100, 255, 218, 0.6) !important; border-color: #64ffda !important; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .shake-error { animation: shake 0.3s; border-color: #ff5555 !important; box-shadow: 0 0 30px rgba(255, 85, 85, 0.6) !important; }
-        
         h1 { color: #d4af37; font-size: 24px; margin-top: 0; letter-spacing: 1px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
-        
-        /* ============ 首頁選單樣式 ============ */
         .domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .domain-card {
-            background: rgba(20, 30, 40, 0.8); border: 1px solid #5a7a8a; border-radius: 10px;
-            padding: 20px 10px; cursor: pointer; transition: all 0.3s;
-        }
+        .domain-card { background: rgba(20, 30, 40, 0.8); border: 1px solid #5a7a8a; border-radius: 10px; padding: 20px 10px; cursor: pointer; transition: all 0.3s; }
         .domain-card:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); border-color: #d4af37; }
         .domain-icon { font-size: 40px; margin-bottom: 10px; }
         .domain-title { font-weight: bold; font-size: 16px; color: #fff; }
-        
-        /* ============ 遊戲介面樣式 ============ */
         .avatar-area { display: flex; align-items: center; text-align: left; margin-bottom: 15px; border-bottom: 1px solid #3a4a5a; padding-bottom: 10px; }
         .avatar { font-size: 30px; background: linear-gradient(135deg, #2a4858, #111); border-radius: 50%; padding: 5px; border: 2px solid #d4af37; margin-right: 12px; }
         .story-text { font-size: 14px; color: #88d4c1; line-height: 1.5; }
-        
         .status-bar { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-bottom: 15px; background: #1a2c38; padding: 10px; border-radius: 8px; }
         .boss-hp-bar { width: 100%; height: 10px; background: #333; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
         .boss-hp-fill { height: 100%; background: #ff5555; width: 100%; transition: width 0.3s ease; }
-        
         .combat-area { min-height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .hemisphere-tag { background: #d4af37; color: #000; padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; margin-bottom: 10px; }
         .wind-arrow { font-size: 60px; margin: 10px 0; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
-        
-        .question-text { font-size: 20px; font-weight: bold; margin-bottom: 15px; line-height: 1.5; color: #ffddaa; text-align: left; }
-        
+        .question-text { font-size: 17px; font-weight: bold; margin-bottom: 15px; line-height: 1.5; color: #ffddaa; text-align: left; }
         .btn-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
         .row-btns { display: flex; justify-content: space-between; gap: 10px; width: 100%; }
-        button {
-            background: linear-gradient(135deg, #2a4858, #16242e); border: 1px solid #5a7a8a; color: #e5e0d8;
-            padding: 12px; font-size: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; text-align: left;
-        }
+        button { background: linear-gradient(135deg, #2a4858, #16242e); border: 1px solid #5a7a8a; color: #e5e0d8; padding: 12px; font-size: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; text-align: left; }
         button:hover { background: #d4af37; color: #000; border-color: #fff; }
         button.p1-btn { text-align: center; flex: 1; }
-        
         #message { margin-top: 15px; height: 20px; font-weight: bold; font-size: 15px; }
         .hidden { display: none !important; }
         .success-text { color: #64ffda; }
         .error-text { color: #ff5555; }
-
-        /* 戰後筆記 (錯題本) */
         .report-box { background: rgba(0,0,0,0.6); border: 1px solid #64ffda; border-radius: 10px; padding: 15px; margin-top: 15px; text-align: left; }
         .report-title { color: #d4af37; font-size: 18px; margin-top: 0; border-bottom: 1px solid #d4af37; padding-bottom: 5px; }
         .wrong-item { background: rgba(255,85,85,0.1); border-left: 4px solid #ff5555; padding: 10px; margin-bottom: 15px; }
         .exp-detail { font-size: 14px; color: #bbb; margin-top: 10px; line-height: 1.6; }
         .exp-detail span.right-opt { color: #64ffda; }
         .exp-detail span.wrong-opt { color: #ffaaaa; }
-        
         .home-btn { background: #d4af37; color: #000; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="game-container" id="gameBox">
-    
     <div id="homeScreen">
-        <h1>🌍 蓋亞紀元：特搜小隊</h1>
-        <p style="color: #88d4c1; font-size: 14px;">指揮官，請選擇您要出擊的領域！</p>
+        <h1>🌍 蓋亞紀元：115學測特訓</h1>
+        <p style="color: #88d4c1; font-size: 14px;">指揮官，四大領域的 Boss 已鎖定，請選擇出擊！</p>
         <div class="domain-grid">
-            <div class="domain-card" onclick="startGame('atmosphere')">
-                <div class="domain-icon">🌪️</div><div class="domain-title">大氣領域</div>
-            </div>
-            <div class="domain-card" onclick="startGame('astronomy')">
-                <div class="domain-icon">🌟</div><div class="domain-title">天文領域</div>
-            </div>
-            <div class="domain-card" onclick="startGame('geology')">
-                <div class="domain-icon">🌋</div><div class="domain-title">地質領域</div>
-            </div>
-            <div class="domain-card" onclick="startGame('ocean')">
-                <div class="domain-icon">🌊</div><div class="domain-title">海洋領域</div>
-            </div>
+            <div class="domain-card" onclick="startGame('atmosphere')"><div class="domain-icon">🌪️</div><div class="domain-title">大氣領域</div></div>
+            <div class="domain-card" onclick="startGame('astronomy')"><div class="domain-icon">🌟</div><div class="domain-title">天文領域</div></div>
+            <div class="domain-card" onclick="startGame('geology')"><div class="domain-icon">🌋</div><div class="domain-title">地質領域</div></div>
+            <div class="domain-card" onclick="startGame('ocean')"><div class="domain-icon">🌊</div><div class="domain-title">海洋領域</div></div>
         </div>
     </div>
 
     <div id="gameScreen" class="hidden">
         <h1 id="levelTitle">關卡名稱</h1>
-        
-        <div class="avatar-area">
-            <div class="avatar" id="avatarIcon">👦🏼</div>
-            <div class="story-text" id="storyBox">劇情對話</div>
-        </div>
-        
-        <div class="status-bar" id="statusBar">
-            <div style="color: #64ffda;" id="phaseText">階段 1：護盾破解</div>
-            <div style="color: #ff5555;">Boss HP: <span id="hpNum">100</span>%</div>
-        </div>
+        <div class="avatar-area"><div class="avatar" id="avatarIcon">👦🏼</div><div class="story-text" id="storyBox">劇情對話</div></div>
+        <div class="status-bar" id="statusBar"><div style="color: #64ffda;" id="phaseText">階段 1：護盾破解</div><div style="color: #ff5555;">Boss HP: <span id="hpNum">100</span>%</div></div>
         <div class="boss-hp-bar" id="hpBarContainer"><div class="boss-hp-fill" id="hpFill"></div></div>
 
         <div id="phase1" class="combat-area">
@@ -125,266 +78,156 @@
             <div class="question-text" id="p2Question">題目載入中...</div>
             <div class="btn-group" id="p2Options"></div>
         </div>
-
         <div id="message"></div>
     </div>
 
     <div id="victoryScreen" class="hidden">
         <h2 style="color:#64ffda;">🏆 討伐成功</h2>
         <div id="reportArea"></div>
-        <button class="home-btn" onclick="returnToHome()">返回基地</button>
+        <button class="home-btn" onclick="returnToHome()">返回基地 (挑選新關卡)</button>
     </div>
-
 </div>
 
 <script>
-    // ================= 原生合成音效系統 (Web Audio API) =================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
-
-    function initAudio() {
-        if (!audioCtx) audioCtx = new AudioContext();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
-
+    function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
     function playTone(freq, type, duration, vol=0.1) {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        if (!audioCtx) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
         osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
     }
+    function sfxCorrect() { initAudio(); playTone(880, 'sine', 0.1); setTimeout(() => playTone(1108, 'sine', 0.2), 100); }
+    function sfxWrong() { initAudio(); playTone(300, 'sawtooth', 0.2); setTimeout(() => playTone(250, 'sawtooth', 0.3), 150); }
+    function sfxVictory() { initAudio(); const notes = [523.25, 659.25, 783.99, 1046.50]; notes.forEach((freq, i) => { setTimeout(() => playTone(freq, 'triangle', i===3?0.6:0.2, 0.15), i * 120); }); }
 
-    // 答對音效：清脆的高音 (叮咚)
-    function sfxCorrect() {
-        initAudio();
-        playTone(880, 'sine', 0.1); 
-        setTimeout(() => playTone(1108, 'sine', 0.2), 100);
-    }
-
-    // 答錯音效：低沉的蜂鳴 (叭叭)
-    function sfxWrong() {
-        initAudio();
-        playTone(300, 'sawtooth', 0.2);
-        setTimeout(() => playTone(250, 'sawtooth', 0.3), 150);
-    }
-
-    // 過關音效：原神抽卡金光般的勝利音效 (歡呼和弦)
-    function sfxVictory() {
-        initAudio();
-        const notes = [523.25, 659.25, 783.99, 1046.50]; // C大三和弦琶音
-        notes.forEach((freq, i) => {
-            setTimeout(() => playTone(freq, 'triangle', i===3?0.6:0.2, 0.15), i * 120);
-        });
-    }
-
-    // ================= 四大領域題庫系統 =================
-    // ★ 亮點：這裡包含了您提供的 115 學測自然科真實題目！
+    // ================= 115學測 全領域擴充題庫 =================
     const domainData = {
         atmosphere: {
-            title: "🌪️ 溫帶氣旋討伐戰", avatar: "👦🏼", charName: "嵐",
-            intro: "指揮官！氣壓異常！請先破解科氏力護盾，再用正確的觀念擊潰它的核心！",
+            title: "🌪️ 溫帶氣旋討伐戰", avatar: "👦🏼", charName: "嵐", intro: "大氣系統異常！請運用鋒面與氣壓知識，擊潰核心！",
             questions: [
-                {
-                    q: "當冷鋒通過台灣時，通常會伴隨下列哪一種天氣變化？",
-                    options: ["(A) 氣壓下降，氣溫上升", "(B) 氣壓上升，氣溫下降", "(C) 風向轉為偏南風", "(D) 出現連續數天的綿綿細雨"],
-                    ans: 1,
-                    explanation: "<span class='right-opt'>(B) 正確：</span>冷氣團取代暖氣團，導致氣溫下降、氣壓上升。<br><span class='wrong-opt'>(A)(C)(D) 錯誤。</span>"
-                }
+                { q: "【115學測概念】若台灣受「滯留鋒」影響，最可能出現下列何種天氣型態？", options: ["(A) 連日晴朗炎熱，午後有雷陣雨", "(B) 冷暖氣團勢力相當，出現連續數日的降雨", "(C) 氣壓急遽下降，出現狂風暴雨", "(D) 寒流來襲，氣溫驟降"], ans: 1, explanation: "<span class='right-opt'>(B) 正確：</span>滯留鋒是冷暖氣團勢力相當時形成，移動緩慢，台灣梅雨季即為此典型。<br><span class='wrong-opt'>(A)為太平洋高壓，(C)為颱風，(D)為冷鋒過境。</span>" },
+                { q: "【115學測概念】關於北半球地面高低氣壓的特徵，何者敘述正確？", options: ["(A) 低氣壓中心常為下沉氣流，天氣晴朗", "(B) 颱風屬於強烈的高氣壓系統", "(C) 受科氏力影響，高氣壓氣流呈順時針輻散", "(D) 溫帶氣旋屬於高氣壓系統"], ans: 2, explanation: "<span class='right-opt'>(C) 正確：</span>北半球高壓受科氏力向右偏轉，形成順時針向外輻散。<br><span class='wrong-opt'>(A)低壓是上升氣流，(B)(D)颱風與溫帶氣旋皆為低氣壓系統。</span>" },
+                { q: "當冷鋒通過台灣時，測站最可能觀察到下列哪一種氣象要素的變化？", options: ["(A) 氣壓下降，氣溫上升", "(B) 氣壓上升，氣溫下降", "(C) 風向必定轉為偏南風", "(D) 相對溼度瞬間降至 10%"], ans: 1, explanation: "<span class='right-opt'>(B) 正確：</span>冷空氣密度大取代暖空氣，故氣溫下降、氣壓上升。<br><span class='wrong-opt'>冷鋒過後台灣多轉吹偏北風。</span>" }
             ]
         },
         astronomy: {
-            title: "🌟 渾沌黑洞討伐戰", avatar: "👩🏻", charName: "遙",
-            intro: "星象發生了偏移...指揮官，我們必須解開恆星與宇宙的歷史，才能穩定時空！",
+            title: "🌟 渾沌黑洞討伐戰", avatar: "👩🏻", charName: "遙", intro: "宇宙正在膨脹！測量星系的距離與年齡，我們才能勝利！",
             questions: [
-                {
-                    // 來自您上傳的 115 學測自然科考卷概念！
-                    q: "【115學測題】太陽系的小天體是由太陽星雲中的塵埃累積而成，科學家透過隕石來瞭解太陽系的形成時間。若想知道隕石的年齡，最常藉由下列何種方法得知？",
-                    options: ["(A) 碳-14放射性同位素定年法", "(B) 鈾-鉛放射性同位素定年法", "(C) 分析隕石表面的風化與撞擊坑", "(D) 觀察隕石中的化石紀錄"],
-                    ans: 1,
-                    explanation: "<span class='wrong-opt'>(A) 錯誤：</span>碳-14半衰期太短（約5730年），無法測定數十億年的太陽系年齡。<br><span class='right-opt'>(B) 正確：</span>鈾的同位素半衰期長達數億至數十億年，非常適合用來測定隕石與太陽系的絕對年齡。<br><span class='wrong-opt'>(C)(D) 錯誤：</span>這些無法測定「絕對年齡」，且隕石中無生命化石。"
-                }
+                { q: "【115學測題】太陽系的小天體由塵埃累積而成，科學家若想知道隕石的「絕對年齡」，最常藉由下列何種方法得知？", options: ["(A) 碳-14 放射性同位素定年法", "(B) 鈾-鉛 放射性同位素定年法", "(C) 分析隕石表面的撞擊坑密度", "(D) 觀察隕石中的化石紀錄"], ans: 1, explanation: "<span class='right-opt'>(B) 正確：</span>鈾的半衰期長達數億至數十億年，適合測定太陽系初期生成的隕石年齡。<br><span class='wrong-opt'>(A)碳-14半衰期太短(約5730年)，無法測量數十億年的天體。</span>" },
+                { q: "【115學測概念】依據哈伯定律 (Hubble's Law)，觀測遙遠星系時，會發現下列何種現象？", options: ["(A) 星系與我們的距離越遠，遠離我們的速度越快", "(B) 星系質量越大，光度越強", "(C) 所有的星系都在向地球靠近", "(D) 宇宙膨脹的速度正在逐漸減慢"], ans: 0, explanation: "<span class='right-opt'>(A) 正確：</span>哈伯定律指出星系的退行速度與其距離成正比，此為宇宙正在膨脹的鐵證。" },
+                { q: "在赫羅圖 (H-R Diagram) 中，恆星的表面溫度與顏色息息相關。若某恆星表面溫度極高，其外觀最可能呈現什麼顏色？", options: ["(A) 紅色", "(B) 黃色", "(C) 白色", "(D) 藍色"], ans: 3, explanation: "<span class='right-opt'>(D) 正確：</span>根據黑體輻射定律，溫度越高的恆星，輻射最強的波段偏向短波長，故呈現藍色（如參宿七）。紅色恆星溫度最低。" }
             ]
         },
         geology: {
-            title: "🌋 斷層巨龍討伐戰", avatar: "👦🏽", charName: "焰",
-            intro: "大地在震動！指揮官，快點幫我判斷地震波的方向，粉碎這頭巨龍的板塊裝甲！",
+            title: "🌋 斷層巨龍討伐戰", avatar: "👦🏽", charName: "焰", intro: "台灣位於板塊交界帶！請判讀地震波與板塊構造，粉碎巨龍！",
             questions: [
-                {
-                    q: "關於地震波（P波與S波）的性質，下列敘述何者正確？",
-                    options: ["(A) S波的傳遞速度比P波快", "(B) P波只能在固體中傳播", "(C) S波會造成地表上下震動", "(D) 測站會先接收到P波，再接收到S波"],
-                    ans: 3,
-                    explanation: "<span class='right-opt'>(D) 正確：</span>P波(縱波)速度快最先到達，S波(橫波)速度較慢隨後到達。<br><span class='wrong-opt'>(B) 錯誤：</span>P波可在固、液、氣體中傳播，S波才只能在固體中傳播。"
-                }
+                { q: "【115學測概念】台灣東部海域頻繁發生地震。當一次大地震發生時，關於「地震規模」與「地震震度」的敘述，何者正確？", options: ["(A) 各地測得的地震規模相同，但震度可能不同", "(B) 距離震央越遠，地震規模越小", "(C) 各地測得的地震震度必定相同", "(D) 規模是衡量地表搖晃程度的單位"], ans: 0, explanation: "<span class='right-opt'>(A) 正確：</span>「規模」是釋放能量的總值，一場地震只有一個規模；「震度」是各地的搖晃程度，距離越遠通常震度越小。" },
+                { q: "【115學測概念】關於地震波中的 P 波與 S 波，下列敘述何者正確？", options: ["(A) S 波的傳遞速度比 P 波快", "(B) 測站會先接收到 P 波，才接收到 S 波", "(C) S 波可以在液體（如外地核）中傳播", "(D) 兩者皆屬於表面波"], ans: 1, explanation: "<span class='right-opt'>(B) 正確：</span>P波(縱波)速度最快，最先到達測站。<br><span class='wrong-opt'>(C) S波(橫波)只能在固體中傳播，無法穿透液態外地核。</span>" },
+                { q: "台灣島的形成，主要是哪兩個板塊相互「聚合、擠壓」的結果？", options: ["(A) 太平洋板塊與歐亞板塊", "(B) 菲律賓海板塊與歐亞板塊", "(C) 印澳板塊與太平洋板塊", "(D) 北美板塊與菲律賓海板塊"], ans: 1, explanation: "<span class='right-opt'>(B) 正確：</span>台灣位於歐亞板塊與菲律賓海板塊的聚合型交界帶，造就了豐富的地震與造山運動。" }
             ]
         },
         ocean: {
-            title: "🌊 聖嬰海怪討伐戰", avatar: "👧🏻", charName: "澪",
-            intro: "指揮官...海流的溫度異常升高了。請協助我解析大洋環流，喚醒深層的湧升流吧！",
+            title: "🌊 聖嬰海怪討伐戰", avatar: "👧🏻", charName: "澪", intro: "海流與潮汐正在異常變化！請找出大洋的規律，喚醒湧升流！",
             questions: [
-                {
-                    q: "當太平洋發生「聖嬰現象 (El Niño)」時，赤道東太平洋（如秘魯沿岸）會出現何種異常現象？",
-                    options: ["(A) 表層海水溫度異常降低", "(B) 湧升流增強，漁獲量大增", "(C) 東風（信風）異常增強", "(D) 表層海水溫度異常升高，降雨量增加"],
-                    ans: 3,
-                    explanation: "<span class='right-opt'>(D) 正確：</span>聖嬰時信風減弱，暖海水向東回流，導致秘魯沿岸水溫升高、降雨增加。<br><span class='wrong-opt'>(B) 錯誤：</span>湧升流會減弱甚至消失，導致漁獲量大減。"
-                }
+                { q: "【115學測概念】當太平洋發生「聖嬰現象 (El Niño)」時，赤道東太平洋（如秘魯沿岸）的氣候與海洋會出現何種改變？", options: ["(A) 東南信風異常增強", "(B) 湧升流變強，漁獲量大增", "(C) 表層海水溫度異常升高，降雨量增加", "(D) 海水溫度降低，引發嚴重乾旱"], ans: 2, explanation: "<span class='right-opt'>(C) 正確：</span>聖嬰年時，東南信風減弱，原本被吹向西邊的溫暖海水向東回流，導致秘魯沿岸升溫，空氣受熱上升引發異常大雨。" },
+                { q: "【115學測概念】黑潮是影響台灣的重要洋流。關於黑潮的敘述，下列何者正確？", options: ["(A) 屬於寒流，水溫較低", "(B) 沿著台灣東部海域由北向南流動", "(C) 是一股高溫、高鹽度的溫暖洋流", "(D) 僅在冬季才會出現"], ans: 2, explanation: "<span class='right-opt'>(C) 正確：</span>黑潮發源於赤道地區，是一股強勁、溫暖且鹽度較高的表面洋流，一年四季皆由南向北流經台灣東部。" },
+                { q: "關於全球的「溫鹽環流 (Thermohaline circulation)」，其主要驅動的力量來源為何？", options: ["(A) 海面上的盛行風系", "(B) 海水溫度與鹽度造成的密度差異", "(C) 月球與太陽的引潮力", "(D) 地球自轉產生的科氏力"], ans: 1, explanation: "<span class='right-opt'>(B) 正確：</span>溫鹽環流是深層洋流，主要是因為極區海水結冰導致留下的海水鹽度變高、溫度變低，密度變大而下沉所驅動。" }
             ]
         }
     };
 
-    // ================= 遊戲核心變數 =================
-    let currentDomain = null;
-    let bossHp = 100;
-    let p1Combo = 0;
-    let currentQIndex = 0;
-    let wrongRecords = [];
-    let hasFailedCurrentQ = false;
-    let currentHemi = "";
-    const directions = [{ name: "向北", sym: "⬆️" }, { name: "向南", sym: "⬇️" }, { name: "向東", sym: "➡️" }, { name: "向西", sym: "⬅️" }];
+    // ================= 隨機洗牌與遊戲控制 =================
+    let currentDomain = null; let bossHp = 100; let p1Combo = 0; let currentQIndex = 0;
+    let wrongRecords = []; let hasFailedCurrentQ = false; let currentHemi = ""; let sessionQuestions = [];
 
-    // ================= 流程控制 =================
     function startGame(domainKey) {
-        initAudio(); // 點擊時初始化音效引擎
+        initAudio(); 
         currentDomain = domainData[domainKey];
-        
-        // UI 切換
-        document.getElementById('homeScreen').classList.add('hidden');
-        document.getElementById('victoryScreen').classList.add('hidden');
-        document.getElementById('gameScreen').classList.remove('hidden');
-        document.getElementById('statusBar').classList.remove('hidden');
-        document.getElementById('hpBarContainer').classList.remove('hidden');
-        document.getElementById('phase1').classList.remove('hidden');
+        sessionQuestions = [...currentDomain.questions].sort(() => Math.random() - 0.5); 
+
+        document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('victoryScreen').classList.add('hidden');
+        document.getElementById('gameScreen').classList.remove('hidden'); document.getElementById('statusBar').classList.remove('hidden');
+        document.getElementById('hpBarContainer').classList.remove('hidden'); document.getElementById('phase1').classList.remove('hidden');
         document.getElementById('phase2').classList.add('hidden');
         
-        // 資料載入
-        document.getElementById('levelTitle').innerText = currentDomain.title;
-        document.getElementById('avatarIcon').innerText = currentDomain.avatar;
+        document.getElementById('levelTitle').innerText = currentDomain.title; document.getElementById('avatarIcon').innerText = currentDomain.avatar;
         document.getElementById('storyBox').innerText = `${currentDomain.charName}：「${currentDomain.intro}」`;
         
-        // 重置狀態
-        bossHp = 100; p1Combo = 0; currentQIndex = 0; wrongRecords = [];
-        updateHP();
-        loadP1();
+        bossHp = 100; p1Combo = 0; currentQIndex = 0; wrongRecords = []; updateHP(); loadP1();
     }
 
     function returnToHome() {
-        document.getElementById('gameScreen').classList.add('hidden');
-        document.getElementById('victoryScreen').classList.add('hidden');
+        document.getElementById('gameScreen').classList.add('hidden'); document.getElementById('victoryScreen').classList.add('hidden');
         document.getElementById('homeScreen').classList.remove('hidden');
     }
 
-    // ================= Phase 1 =================
     function loadP1() {
         if (p1Combo >= 3) { startPhase2(); return; }
         currentHemi = Math.random() > 0.5 ? "北半球" : "南半球";
-        let dir = directions[Math.floor(Math.random() * directions.length)];
+        let dir = [{ name: "向北", sym: "⬆️" }, { name: "向南", sym: "⬇️" }, { name: "向東", sym: "➡️" }, { name: "向西", sym: "⬅️" }][Math.floor(Math.random() * 4)];
         
-        document.getElementById('hemiTag').innerText = currentHemi;
-        document.getElementById('hemiTag').style.background = currentHemi === "北半球" ? "#d4af37" : "#88d4c1";
-        document.getElementById('p1Dir').innerText = "科氏力防護罩：氣流" + dir.name;
-        document.getElementById('p1Arrow').innerText = dir.sym;
+        document.getElementById('hemiTag').innerText = currentHemi; document.getElementById('hemiTag').style.background = currentHemi === "北半球" ? "#d4af37" : "#88d4c1";
+        document.getElementById('p1Dir').innerText = "科氏力防護罩：氣流" + dir.name; document.getElementById('p1Arrow').innerText = dir.sym;
         document.getElementById('message').innerText = `護盾連擊: ${p1Combo}/3`;
     }
 
     function checkP1(ans) {
         let isCorrect = (currentHemi === "北半球" && ans === "right") || (currentHemi === "南半球" && ans === "left");
-        if (isCorrect) {
-            p1Combo++; damageBoss(10); showEffect(true, "護盾削弱！");
-            sfxCorrect(); // 播放答對音效
-            setTimeout(loadP1, 800);
-        } else {
-            p1Combo = 0; showEffect(false, `錯誤！${currentHemi}應向${currentHemi==="北半球"?"右":"左"}偏！`);
-            sfxWrong(); // 播放答錯音效
-            setTimeout(loadP1, 1500);
-        }
+        if (isCorrect) { p1Combo++; damageBoss(10); showEffect(true, "護盾削弱！"); sfxCorrect(); setTimeout(loadP1, 800); } 
+        else { p1Combo = 0; showEffect(false, `錯誤！應向${currentHemi==="北半球"?"右":"左"}偏！`); sfxWrong(); setTimeout(loadP1, 1500); }
     }
 
-    // ================= Phase 2 =================
     function startPhase2() {
-        document.getElementById('phase1').classList.add('hidden');
-        document.getElementById('phase2').classList.remove('hidden');
-        document.getElementById('phaseText').innerText = "階段 2：學測知識戰";
-        document.getElementById('storyBox').innerText = `${currentDomain.charName}：「護盾破除了！Boss 核心暴露，請用正確的知識給予致命一擊！」`;
+        document.getElementById('phase1').classList.add('hidden'); document.getElementById('phase2').classList.remove('hidden');
+        document.getElementById('phaseText').innerText = "階段 2：115學測實戰";
+        document.getElementById('storyBox').innerText = `${currentDomain.charName}：「護盾破除了！Boss 核心暴露，運用學測知識給予致命一擊！」`;
         loadP2();
     }
 
     function loadP2() {
-        if (currentQIndex >= currentDomain.questions.length || bossHp <= 0) { victory(); return; }
+        if (currentQIndex >= sessionQuestions.length || bossHp <= 0) { victory(); return; }
         hasFailedCurrentQ = false;
+        let qData = sessionQuestions[currentQIndex];
+        document.getElementById('p2Question').innerText = `【實戰題】\n` + qData.q;
         
-        let qData = currentDomain.questions[currentQIndex];
-        document.getElementById('p2Question').innerText = `【實戰演練】\n` + qData.q;
-        
-        let optContainer = document.getElementById('p2Options');
-        optContainer.innerHTML = '';
-        
+        let optContainer = document.getElementById('p2Options'); optContainer.innerHTML = '';
         qData.options.forEach((optText, index) => {
-            let btn = document.createElement('button');
-            btn.innerText = optText;
-            btn.onclick = () => checkP2(index, qData.ans);
-            optContainer.appendChild(btn);
+            let btn = document.createElement('button'); btn.innerText = optText;
+            btn.onclick = () => checkP2(index, qData.ans); optContainer.appendChild(btn);
         });
         document.getElementById('message').innerText = "請選擇正確答案！";
     }
 
     function checkP2(selectedIndex, correctIndex) {
         if (selectedIndex === correctIndex) {
-            damageBoss(40);
-            showEffect(true, "正確！致命打擊！");
-            sfxCorrect(); // 答對音效
-            currentQIndex++;
-            setTimeout(loadP2, 1200);
+            damageBoss(35); showEffect(true, "正確！致命打擊！"); sfxCorrect(); currentQIndex++; setTimeout(loadP2, 1200);
         } else {
-            showEffect(false, "觀念錯誤！已記錄至錯題本，請再試一次！");
-            sfxWrong(); // 答錯音效
-            if(!hasFailedCurrentQ) {
-                wrongRecords.push(currentDomain.questions[currentQIndex]);
-                hasFailedCurrentQ = true;
-            }
+            showEffect(false, "觀念錯誤！已記錄至錯題本！"); sfxWrong();
+            if(!hasFailedCurrentQ) { wrongRecords.push(sessionQuestions[currentQIndex]); hasFailedCurrentQ = true; }
         }
     }
 
-    // ================= 核心工具 =================
-    function damageBoss(amt) {
-        bossHp -= amt; if(bossHp < 0) bossHp = 0;
-        document.getElementById('hpNum').innerText = bossHp;
-        document.getElementById('hpFill').style.width = bossHp + "%";
-    }
+    function damageBoss(amt) { bossHp -= amt; if(bossHp < 0) bossHp = 0; document.getElementById('hpNum').innerText = bossHp; document.getElementById('hpFill').style.width = bossHp + "%"; }
 
     function showEffect(isGood, text) {
-        const gameBox = document.getElementById('gameBox');
-        const msg = document.getElementById('message');
+        const gameBox = document.getElementById('gameBox'); const msg = document.getElementById('message');
         msg.innerHTML = `<span class="${isGood ? 'success-text' : 'error-text'}">${text}</span>`;
-        gameBox.classList.add(isGood ? 'flash-green' : 'shake-error');
-        setTimeout(() => { gameBox.classList.remove('flash-green', 'shake-error'); }, 400);
+        gameBox.classList.add(isGood ? 'flash-green' : 'shake-error'); setTimeout(() => { gameBox.classList.remove('flash-green', 'shake-error'); }, 400);
     }
 
     function victory() {
-        document.getElementById('phase2').classList.add('hidden');
-        document.getElementById('statusBar').classList.add('hidden');
-        document.getElementById('hpBarContainer').classList.add('hidden');
-        document.getElementById('message').innerText = "";
-        
-        sfxVictory(); // 播放勝利過關音效！
-        
-        document.getElementById('storyBox').innerText = `${currentDomain.charName}：「危機解除！指揮官，這是本次戰鬥的【絕密檔案】，請查收！」`;
+        document.getElementById('phase2').classList.add('hidden'); document.getElementById('statusBar').classList.add('hidden'); document.getElementById('hpBarContainer').classList.add('hidden'); document.getElementById('message').innerText = "";
+        sfxVictory(); 
+        document.getElementById('storyBox').innerText = `${currentDomain.charName}：「危機解除！指揮官，這是本次戰鬥的【115學測絕密檔案】，請查收！」`;
         document.getElementById('victoryScreen').classList.remove('hidden');
         
-        let reportHTML = `<div class="report-box"><h3 class="report-title">📚 蓋亞觀測站：戰後檢討</h3>`;
-        if (wrongRecords.length === 0) {
-            reportHTML += `<p style="color:#64ffda; font-weight:bold;">✨ 完美通關！所有觀念皆完全掌握，沒有錯題！</p></div>`;
-        } else {
+        let reportHTML = `<div class="report-box"><h3 class="report-title">📚 蓋亞觀測站：學測戰後檢討</h3>`;
+        if (wrongRecords.length === 0) { reportHTML += `<p style="color:#64ffda; font-weight:bold;">✨ 完美通關！所有觀念皆完全掌握，沒有錯題！</p></div>`; } 
+        else {
             reportHTML += `<p style="color:#ffddaa; font-size:14px;">偵測到戰鬥中有盲點，以下為錯題的詳細解析：</p>`;
-            wrongRecords.forEach((qData, idx) => {
-                reportHTML += `
-                    <div class="wrong-item">
-                        <div style="font-weight:bold; color:#fff;">${qData.q}</div>
-                        <div class="exp-detail"><strong style="color:#d4af37;">【解析】</strong><br>${qData.explanation}</div>
-                    </div>`;
-            });
+            wrongRecords.forEach((qData, idx) => { reportHTML += `<div class="wrong-item"><div style="font-weight:bold; color:#fff;">${qData.q}</div><div class="exp-detail"><strong style="color:#d4af37;">【解析】</strong><br>${qData.explanation}</div></div>`; });
             reportHTML += `</div>`;
         }
         document.getElementById('reportArea').innerHTML = reportHTML;
